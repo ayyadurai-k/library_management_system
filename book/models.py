@@ -23,3 +23,5 @@ class Book(models.Model):
 
 #1. python manage.py makemigrations
 #2.  python manage.py migrate
+
+# CREATE , READ , UPDATE , DELETE => CRUD
