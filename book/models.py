@@ -17,6 +17,9 @@ class Book(models.Model):
     description = (
         models.TextField()
     )  # Use text field when you dont want to specify tbe length
+    
+    def __str__(self):
+        return self.name
 
 
 # TO CONVERT MODEL INTO TABLE
