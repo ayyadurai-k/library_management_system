@@ -31,3 +31,20 @@ def get_book(request,book_id):
     }
     return JsonResponse(data,safe=False)
 
+@csrf_exempt
+def update_book(request,book_id):
+    book = Book.objects.get(id=book_id)
+    data = json.loads(request.body)
+    
+    book.name = data.get("name")
+    book.description = data.get("description")
+    
+    book.save()
+    
+    return JsonResponse({"message": "Book updated successfully"})
+
+@csrf_exempt
+def delete_book(request,book_id):
+    book = Book.objects.get(id=book_id)
+    book.delete()
+    return JsonResponse({"message": "Book deleted successfully"})
