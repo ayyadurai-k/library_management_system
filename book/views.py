@@ -6,7 +6,6 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
-@csrf_exempt
 def create_book(request):
     data = json.loads(request.body) # CONVERT JSON INTO DICTIONARY
     
