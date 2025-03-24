@@ -1,47 +1,18 @@
-from asyncio import IocpProactor
-from django.shortcuts import render
+from rest_framework.decorators import api_view
+import book
 from book.models import Book
-from django.http import JsonResponse
-import json 
-from django.views.decorators.csrf import csrf_exempt
-# Create your views here.
+from book.serializers import BookSerializer
+from rest_framework.response import Response
 
-def create_book(request):
-    data = json.loads(request.body) # CONVERT JSON INTO DICTIONARY
-    
-    name = data.get("name") # EXTRACT VALUE FROM DICTIONARY
-    description = data.get("description") # EXTRACT VALUE FROM DICTIONARY
-    
-    book = Book.objects.create(name=name,description=description)
-    
-    return JsonResponse({"message": "Book created successfully"})
-
-def list_books(request):
-    books = Book.objects.all().values("id","name", "description")
-    return JsonResponse(list(books), safe=False)
-
-
+@api_view(["GET"]) # TO SPECIFY THE REQUEST METHOD
 def get_book(request,book_id):
     book = Book.objects.get(id=book_id)
-    data = {
-        "id": book.id,
-        "name": book.name,
-        "description": book.description
-    }
-    return JsonResponse(data,safe=False)
+    serializer = BookSerializer(book) # CONVERT MODEL OBJECT INTO JSON
+    return Response(serializer.data) # SEND RESPONSE TO USER
 
-def update_book(request,book_id):
-    book = Book.objects.get(id=book_id)
-    data = json.loads(request.body)
-    
-    book.name = data.get("name")
-    book.description = data.get("description")
-    
-    book.save()
-    
-    return JsonResponse({"message": "Book updated successfully"})
 
-def delete_book(request,book_id):
-    book = Book.objects.get(id=book_id)
-    book.delete()
-    return JsonResponse({"message": "Book deleted successfully"})
+@api_view(["GET"])
+def list_books(request):    
+    books = Book.objects.all()
+    serializer = BookSerializer(books, many=True)
+    return Response(serializer.data)
