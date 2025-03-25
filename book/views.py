@@ -34,3 +34,10 @@ def update_book(request, book_id):
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response({"message": "Book updated successfully"}, status=200)
+
+
+@api_view(["DELETE"])
+def delete_book(request, book_id):
+    book = Book.objects.get(id=book_id)
+    book.delete()
+    return Response({"message": "Book deleted successfully"}, status=204)
