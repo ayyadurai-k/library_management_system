@@ -16,3 +16,11 @@ def list_books(request):
     books = Book.objects.all()
     serializer = BookSerializer(books, many=True)
     return Response(serializer.data)
+
+
+@api_view(["POST"])
+def create_book(request):
+    serializer = BookSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response({"message":"Book created successfully"}, status=201)
