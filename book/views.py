@@ -1,43 +1,9 @@
-from rest_framework.decorators import api_view
-import book
 from book.models import Book
 from book.serializers import BookSerializer
-from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 
-@api_view(["GET"])  # TO SPECIFY THE REQUEST METHOD
-def get_book(request, book_id):
-    book = Book.objects.get(id=book_id)
-    serializer = BookSerializer(book)  # CONVERT MODEL OBJECT INTO JSON
-    return Response(serializer.data)  # SEND RESPONSE TO USER
+class BookViewSet(ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
 
-
-@api_view(["GET"])
-def list_books(request):
-    books = Book.objects.all()
-    serializer = BookSerializer(books, many=True)
-    return Response(serializer.data)
-
-
-@api_view(["POST"])
-def create_book(request):
-    serializer = BookSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response({"message": "Book created successfully"}, status=201)
-
-
-@api_view(["PATCH"])
-def update_book(request, book_id):
-    book = Book.objects.get(id=book_id)
-    serializer = BookSerializer(instance=book, data=request.data, partial=True)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response({"message": "Book updated successfully"}, status=200)
-
-
-@api_view(["DELETE"])
-def delete_book(request, book_id):
-    book = Book.objects.get(id=book_id)
-    book.delete()
-    return Response({"message": "Book deleted successfully"}, status=204)
