@@ -23,5 +23,6 @@ from library_management.views import get_csrf_token
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("books/",include("book.urls")),
+    path("authors/",include("author.urls")),
     path("csrf-token/",get_csrf_token)
 ]
